@@ -13,13 +13,14 @@ namespace LPKO_2_1_Cykly
             var writer = Console.Out;
             var graph = Parser.ReadInput(reader);
 
-            var result = FindParties(graph);
+            var result = FindViolations(graph);
 
             PrintResult(writer, result);
         }
 
-        private static Result FindParties(Graph graph)
+        private static Result FindViolations(Graph graph)
         {
+            // Find the edges to remove all cycles smaller than 4 in size
             foreach (var node in graph.Nodes)
             {
                 var newNodes = graph.Nodes.Where(n => n != node);
@@ -30,18 +31,18 @@ namespace LPKO_2_1_Cykly
 
                 }
 
-                var rec = FindParties(new Graph(newNodes, newEdges));
+                // var rec = FindViolations(new Graph(newNodes, newEdges));
             }
 
-            return new Result(0, new List<ResultNode>());
+            return new Result(0, new List<Edge>());
         }
 
         private static void PrintResult(TextWriter writer, Result result)
         {
-            writer.WriteLine($"#OUTPUT: {result.NumberOfParties}");
-            foreach (var resultNode in result.Nodes)
+            writer.WriteLine($"#OUTPUT: {result.WeightSum}");
+            foreach (var edge in result.Edges)
             {
-                Console.WriteLine($"v_{resultNode.Node.Number}: {resultNode.PartyNumber}");
+                Console.WriteLine($"{edge.Node1.Number} --> {edge.Node1.Number}");
             }
 
             writer.WriteLine("#OUTPUT END");

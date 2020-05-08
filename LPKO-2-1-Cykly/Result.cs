@@ -4,14 +4,14 @@ namespace LPKO_2_1_Cykly
 {
     public sealed class Result
     {
-        public Result(int numberOfParties, IEnumerable<ResultNode> nodes)
+        public Result(int weightSum, IEnumerable<Edge> edges)
         {
-            NumberOfParties = numberOfParties;
-            Nodes = nodes;
+            WeightSum = weightSum;
+            Edges = edges;
         }
 
-        public int NumberOfParties { get; }
+        public int WeightSum { get; }
 
-        public IEnumerable<ResultNode> Nodes { get; }
+        public IEnumerable<Edge> Edges { get; }
     }
 }
