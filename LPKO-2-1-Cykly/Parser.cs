@@ -46,7 +46,7 @@ namespace LPKO_2_1_Cykly
                 edges.Add(edge);
             }
 
-            return new Graph(nodes.Values.ToList(), edges);
+            return new Graph(nodes.Values.Count, edges);
         }
     }
 }

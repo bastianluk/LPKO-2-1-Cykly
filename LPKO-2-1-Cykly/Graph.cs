@@ -1,27 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace LPKO_2_1_Cykly
 {
     public sealed class Graph
     {
-        public Graph(IEnumerable<Node> nodes, IEnumerable<Edge> edges)
+        public Graph(int nodeCount, IEnumerable<Edge> edges)
         {
-            Nodes = nodes;
+            NodeCount = nodeCount;
             Edges = edges;
         }
 
-        public int NodeCount
-        {
-            get { return Nodes.Count(); }
-        }
-
-        public int EdgeCount
-        {
-            get { return Edges.Count(); }
-        }
-        
-        public IEnumerable<Node> Nodes { get; }
+        public int NodeCount { get; }
 
         public IEnumerable<Edge> Edges { get; }
     }
