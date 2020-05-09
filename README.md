@@ -1,6 +1,6 @@
 # Dokumentace
 
-Dokumentace k generátoru pro příklad `Orientované grafy bez krátkých orientovaných cyklů` napsaném v jazyce C#.
+Dokumentace k generátoru pro příklad `Orientované grafy bez krátkých orientovaných cyklů`[link](https://kam.mff.cuni.cz/~balko/lpko1920/ukolPrakticky.pdf) napsaném v jazyce C#.
 
 ## Sestavení
 
