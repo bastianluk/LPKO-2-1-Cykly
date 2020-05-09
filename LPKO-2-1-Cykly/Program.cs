@@ -25,7 +25,7 @@ namespace LPKO_2_1_Cykly
             reader.Dispose();
 
             var program = SolutionPreparator.PrepareProgram(graph);
-            var writer = new StreamWriter($"vygenerovane_lp{DateTime.Now.TimeOfDay.Ticks}.mod");
+            var writer = new StreamWriter($"vygenerovane_lp.mod");
 
             GenerateProgramFile(writer, program);
             writer.Flush();
