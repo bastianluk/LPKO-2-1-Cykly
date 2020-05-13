@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace LPKO_2_1_Cykly
 {
-    public sealed class SolutionPreparator
+    public sealed class GlpkProgramGenerator
     {
         public static GlpkProgram PrepareProgram(Graph graph)
         {
@@ -33,7 +34,7 @@ namespace LPKO_2_1_Cykly
             return new GlpkProgram(lines);
         }
 
-        private static List<string> GetSetLines(int nodeCount)
+        private static IEnumerable<string> GetSetLines(int nodeCount)
         {
             return new List<string>
             {
@@ -42,12 +43,12 @@ namespace LPKO_2_1_Cykly
             };
         }
 
-        private static List<string> GetParamLines()
+        private static IEnumerable<string> GetParamLines()
         {
             return new List<string> { "param weight{(i,j) in Edges};" };
         }
 
-        private static List<string> GetVariableLines()
+        private static IEnumerable<string> GetVariableLines()
         {
             return new List<string> { "var isRemoved{(i,j) in Edges}, binary;" };
         }
@@ -57,7 +58,7 @@ namespace LPKO_2_1_Cykly
             return "minimize total: sum{(i,j) in Edges} weight[i,j] * isRemoved[i,j];";
         }
 
-        private static List<string> GetConditionLines()
+        private static IEnumerable<string> GetConditionLines()
         {
             return new List<string>
             {
@@ -68,7 +69,7 @@ namespace LPKO_2_1_Cykly
             };
         }
         
-        private static List<string> GetFooter()
+        private static IEnumerable<string> GetFooter()
         {
             return new List<string>
             {
@@ -81,7 +82,7 @@ namespace LPKO_2_1_Cykly
                 "printf \"#OUTPUT END\\n\";",
             };
         }
-        private static List<string> GetDataLines(IEnumerable<Edge> edges)
+        private static IEnumerable<string> GetDataLines(IEnumerable<Edge> edges)
         {
             var data = new List<string>
             {
@@ -90,9 +91,11 @@ namespace LPKO_2_1_Cykly
 
             var weightBuilder = new StringBuilder();
             weightBuilder.Append("param : Edges : weight := ");
-            foreach (var edge in edges)
+            var first = edges.First();
+            weightBuilder.AppendLine($"{first.Node1} {first.Node2} {first.Weight}");
+            foreach (var edge in edges.Skip(1))
             {
-                weightBuilder.AppendLine($"                {edge.Node1} {edge.Node2}  {edge.Weight}");
+                weightBuilder.AppendLine($"                          {edge.Node1} {edge.Node2} {edge.Weight}");
             }
             weightBuilder.Remove(weightBuilder.Length - 2, 2); //Remove the trailing "\r\n"
             weightBuilder.Append(";");

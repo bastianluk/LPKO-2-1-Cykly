@@ -8,6 +8,7 @@ namespace LPKO_2_1_Cykly
     {
         private static void Main(string[] args)
         {
+            Console.WriteLine("Generator - starting.");
             if (args.Length != 1 || args[0] == "-h" || args[0] == "--help")
             {
                 var builder = new StringBuilder();
@@ -15,24 +16,36 @@ namespace LPKO_2_1_Cykly
                 builder.AppendLine($"{typeof(Program).Namespace}.exe inputFilePath");
                 Console.WriteLine(builder.ToString());
 
+                Console.WriteLine("Generator - finished.");
                 return;
             }
 
-            var reader = new StreamReader(args[0]);
+            // Reading the input:
+            var inputFilePath = args[0];
+            Console.WriteLine($"Reading inputfile: {inputFilePath}.");
+            var reader = new StreamReader(inputFilePath);
             var graph = Parser.ReadInput(reader);
 
             reader.Close();
             reader.Dispose();
+            Console.WriteLine("File read.");
 
-            var program = SolutionPreparator.PrepareProgram(graph);
-            var writer = new StreamWriter($"vygenerovane_lp.mod");
+            // Generating linear program:
+            Console.WriteLine("Generating the linear program.");
+            var program = GlpkProgramGenerator.PrepareProgram(graph);
 
-            GenerateProgramFile(writer, program);
+            // Write output.
+            var outputFileName = "vygenerovane_lp.mod";
+            var writer = new StreamWriter($"{outputFileName}");
+            
+            Console.WriteLine($"Writing the linear program to file: {outputFileName}.");
+            WriteGeneratedProgramFile(writer, program);
             writer.Flush();
             writer.Dispose();
+            Console.WriteLine("Generator - finished.");
         }
 
-        private static void GenerateProgramFile(TextWriter writer, GlpkProgram program)
+        private static void WriteGeneratedProgramFile(TextWriter writer, GlpkProgram program)
         {
             foreach (var line in program.ProgramLines)
             {
