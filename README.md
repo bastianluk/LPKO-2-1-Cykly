@@ -14,16 +14,23 @@ Generátoru se jako argument pošlu path ke vstupnímu souboru a on vygeneruje s
 
 Příklad výstupu:
 ```c
+// Vrcholy
 set Nodes := 0..5;
+// Hrany
 set Edges, within Nodes cross Nodes;
+// Vahy hran
 param weight{(i,j) in Edges};
+// Indikator, zda hrana je nebo neni odebrana z puvodniho grafu
 var isRemoved{(i,j) in Edges}, binary;
+// Ucelova funkce
 minimize total: sum{(i,j) in Edges} weight[i,j] * isRemoved[i,j];
+// Podminky
 s.t. condition_circle4{i in Nodes, j in Nodes, k in Nodes, l in Nodes: not(i == j or j == k or k == l or l == i)}:
   ( if ((i,j) in Edges and (j,k) in Edges and (k,l) in Edges and (l,i) in Edges) then (isRemoved[i,j] + isRemoved[j,k] + isRemoved[k,l] + isRemoved[l,i]) else 1 ) >= 1;
 s.t. condition_circle3{i in Nodes, j in Nodes, k in Nodes: not(i == j or j == k or k == i)}:
   ( if ((i,j) in Edges and (j,k) in Edges and (k,i) in Edges) then (isRemoved[i,j] + isRemoved[j,k] + isRemoved[k,i]) else 1 ) >= 1;
 solve;
+// Vystup
 printf "#OUTPUT: %d\n", sum{(i,j) in Edges} weight[i,j] * isRemoved[i,j];
 for {(i,j) in Edges: i != j}
 {
@@ -31,6 +38,7 @@ for {(i,j) in Edges: i != j}
 }
 printf "#OUTPUT END\n";
 data;
+// Data hran a jejich vah
 param : Edges : weight := 5 1 15
                           4 2 30
                           3 4 36
@@ -47,9 +55,13 @@ param : Edges : weight := 5 1 15
 end;
 ```
 
-Program se snaží minimalizovat funkci `sum{(i,j) in Edges} weight[i,j] * isRemoved[i,j];` - tedy hledá hrany, které po odebrání zaručí splnění podmínek a součet jejich vah je nejmenší.
+Ze vstupu se vytvoří množina vrcholů `Nodes`, hran mezi nimi `Edges` a také parametr `weight` reprezentující váhu nějaké hrany z `Edges`.
 
-Podmínky jsou triviálně pro čtveřice (respektive trojice) vrcholů, mezi kterými pokud je cyklus délky 4 (3), tj. vede hrana z A do B, B do C, C do D a z D do A, tak alespoň jedna z těch hran musí být označena jako odebraná ve výsledném grafu.
+Proměnnou je indikátor, zda je hrana mezi `(i, j)` odebrána.
+
+Program se snaží minimalizovat funkci `sum{(i,j) in Edges} weight[i,j] * isRemoved[i,j];` - tedy hledá hrany, které po odebrání zaručí splnění podmínek a zároveň součet takových vah takových hran je nejmenší.
+
+Podmínky jsou triviálně pro čtveřice (respektive trojice) vrcholů, mezi kterými pokud je cyklus délky 4 (3), tj. vede hrana z A do B, B do C, C do D a z D do A, tak alespoň jedna z těch hran musí být označena jako odebraná.
 
 ### Nemá optimální řešení
 
