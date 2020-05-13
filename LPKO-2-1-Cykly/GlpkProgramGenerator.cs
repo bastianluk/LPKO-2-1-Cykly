@@ -20,13 +20,13 @@ namespace LPKO_2_1_Cykly
             lines.AddRange(variables);
 
             var function = GetFunctionLine();
-            lines.Add(function);
+            lines.AddRange(function);
 
             var conditions = GetConditionLines();
             lines.AddRange(conditions);
 
-            var footer = GetFooter();
-            lines.AddRange(footer);
+            var outputPrinter = GetOutputPrinter();
+            lines.AddRange(outputPrinter);
 
             var data = GetDataLines(graph.Edges);
             lines.AddRange(data);
@@ -34,7 +34,10 @@ namespace LPKO_2_1_Cykly
             return new GlpkProgram(lines);
         }
 
-        private static IEnumerable<string> GetSetLines(int nodeCount)
+        /// <summary>
+        /// Generates the lines representing the different sets (Nodes and Edges) needed in this linear program.
+        /// </summary>
+        private static IEnumerable<string> GetSetLines(int nodeCount)   
         {
             return new List<string>
             {
@@ -43,21 +46,33 @@ namespace LPKO_2_1_Cykly
             };
         }
 
+        /// <summary>
+        /// Generates the line representing parameters (weight of an Edge) of the linear program.
+        /// </summary>
         private static IEnumerable<string> GetParamLines()
         {
             return new List<string> { "param weight{(i,j) in Edges};" };
         }
 
+        /// <summary>
+        /// Generates the line representing the variable (indicator isRemoved) of the linear program.
+        /// </summary>
         private static IEnumerable<string> GetVariableLines()
         {
             return new List<string> { "var isRemoved{(i,j) in Edges}, binary;" };
         }
 
-        private static string GetFunctionLine()
+        /// <summary>
+        /// Generates the line representing the function that will be minimized.
+        /// </summary>
+        private static IEnumerable<string> GetFunctionLine()
         {
-            return "minimize total: sum{(i,j) in Edges} weight[i,j] * isRemoved[i,j];";
+            return new List<string>{ "minimize total: sum{(i,j) in Edges} weight[i,j] * isRemoved[i,j];" };
         }
 
+        /// <summary>
+        /// Generates the lines representing the two conditions needed for this linear program - they "ban" cycles of lenght 4 or 3 in the final graph.
+        /// </summary>
         private static IEnumerable<string> GetConditionLines()
         {
             return new List<string>
@@ -69,7 +84,10 @@ namespace LPKO_2_1_Cykly
             };
         }
         
-        private static IEnumerable<string> GetFooter()
+        /// <summary>
+        /// Generates the lines that represent the correct output format of the linear program.
+        /// </summary>
+        private static IEnumerable<string> GetOutputPrinter()
         {
             return new List<string>
             {
@@ -82,6 +100,10 @@ namespace LPKO_2_1_Cykly
                 "printf \"#OUTPUT END\\n\";",
             };
         }
+
+        /// <summary>
+        /// Generates the lines that represent the data input for the linear program.
+        /// </summary>
         private static IEnumerable<string> GetDataLines(IEnumerable<Edge> edges)
         {
             var data = new List<string>
