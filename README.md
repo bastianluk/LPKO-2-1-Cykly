@@ -65,4 +65,4 @@ Podmínky jsou triviálně pro čtveřice (respektive trojice) vrcholů, mezi kt
 
 ### Nemá optimální řešení
 
-Pokud řešič nenajde řešení, tak nelze odebrat hrany z vstupního grafu tak, aby se v něm následně nenacházeli krátké cykly (tedy cykly délky 3 nebo 4).
+Pokud řešič nenajde řešení, tak nelze odebrat hrany z vstupního grafu tak, aby se v něm následně nenacházely krátké cykly (tedy cykly délky 3 nebo 4).
